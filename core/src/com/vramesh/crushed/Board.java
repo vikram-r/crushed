@@ -7,8 +7,11 @@ public class Board {
 
     Kid kid;
 
-    public void update(float delta) {
+    public Board() {
         kid = new Kid(240, 400);
+    }
+
+    public void update(float delta) {
         kid.update(delta);
     }
 }

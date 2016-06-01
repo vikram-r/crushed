@@ -52,9 +52,11 @@ public class BoardRenderer {
         TextureAtlas kidAtlas = new TextureAtlas(Gdx.files.internal("kid/kid.atlas"));
 
         Array<TextureAtlas.AtlasRegion> kidRightRegions = kidAtlas.getRegions();
-        Array<TextureAtlas.AtlasRegion> kidLeftRegions = kidAtlas.getRegions();
-        for (TextureRegion left : kidLeftRegions) {
+        Array<TextureAtlas.AtlasRegion> kidLeftRegions = new Array<TextureAtlas.AtlasRegion>();
+        for (TextureAtlas.AtlasRegion right : kidRightRegions) {
+            TextureAtlas.AtlasRegion left = new TextureAtlas.AtlasRegion(right);
             left.flip(true, false);
+            kidLeftRegions.add(left);
         }
 
         //todo ugly, couldn't figure out good way to convert iterable to Array, so couldn't use predicates
