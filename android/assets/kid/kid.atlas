@@ -1,159 +1,82 @@
 
 kid.png
-size: 128,256
+size: 64,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-kid/hit/left-frame
+kid/hit/frame
   rotate: false
   xy: 2, 212
   size: 26, 40
   orig: 26, 40
   offset: 0, 0
   index: -1
-kid/hit/right-frame
-  rotate: false
-  xy: 30, 86
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/jump/left-jump_fall
-  rotate: false
-  xy: 86, 212
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/jump/left-jump_up
-  rotate: false
-  xy: 2, 44
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/jump/right-jump_fall
-  rotate: false
-  xy: 86, 86
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/jump/right-jump_up
-  rotate: false
-  xy: 58, 2
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/running/left-frame-1
-  rotate: false
-  xy: 2, 170
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/running/left-frame-2
-  rotate: false
-  xy: 2, 128
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/running/left-frame-3
-  rotate: false
-  xy: 58, 212
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/running/left-frame-4
-  rotate: false
-  xy: 2, 86
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/running/left-frame-5
-  rotate: false
-  xy: 30, 128
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/running/left-frame-6
-  rotate: false
-  xy: 58, 170
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/running/right-frame-1
-  rotate: false
-  xy: 58, 128
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/running/right-frame-2
+kid/jump/jump_fall
   rotate: false
   xy: 2, 2
   size: 26, 40
   orig: 26, 40
   offset: 0, 0
   index: -1
-kid/running/right-frame-3
+kid/jump/jump_up
   rotate: false
-  xy: 58, 86
+  xy: 30, 44
   size: 26, 40
   orig: 26, 40
   offset: 0, 0
   index: -1
-kid/running/right-frame-4
+kid/running/frame-1
   rotate: false
-  xy: 86, 128
+  xy: 2, 170
   size: 26, 40
   orig: 26, 40
   offset: 0, 0
   index: -1
-kid/running/right-frame-5
+kid/running/frame-2
   rotate: false
-  xy: 30, 2
+  xy: 2, 128
   size: 26, 40
   orig: 26, 40
   offset: 0, 0
   index: -1
-kid/running/right-frame-6
+kid/running/frame-3
   rotate: false
-  xy: 58, 44
+  xy: 2, 86
   size: 26, 40
   orig: 26, 40
   offset: 0, 0
   index: -1
-kid/standing/left-frame-1
+kid/running/frame-4
+  rotate: false
+  xy: 30, 128
+  size: 26, 40
+  orig: 26, 40
+  offset: 0, 0
+  index: -1
+kid/running/frame-5
+  rotate: false
+  xy: 2, 44
+  size: 26, 40
+  orig: 26, 40
+  offset: 0, 0
+  index: -1
+kid/running/frame-6
+  rotate: false
+  xy: 30, 86
+  size: 26, 40
+  orig: 26, 40
+  offset: 0, 0
+  index: -1
+kid/standing/frame-1
   rotate: false
   xy: 30, 212
   size: 26, 40
   orig: 26, 40
   offset: 0, 0
   index: -1
-kid/standing/left-frame-2
+kid/standing/frame-2
   rotate: false
   xy: 30, 170
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/standing/right-frame-1
-  rotate: false
-  xy: 86, 170
-  size: 26, 40
-  orig: 26, 40
-  offset: 0, 0
-  index: -1
-kid/standing/right-frame-2
-  rotate: false
-  xy: 30, 44
   size: 26, 40
   orig: 26, 40
   offset: 0, 0
