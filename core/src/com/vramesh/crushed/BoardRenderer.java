@@ -5,9 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Predicate;
 
 /**
  * This class is responsible for rendering all the entities onto the game "board"
@@ -18,25 +16,25 @@ public class BoardRenderer {
     OrthographicCamera camera;
     SpriteBatch batch = new SpriteBatch();
 
-
-    Animation kidLeft;
     Animation kidRight;
-    Animation kidJumpLeft;
+    Animation kidLeft;
     Animation kidJumpRight;
-    Animation kidIdleLeft;
+    Animation kidJumpLeft;
+    Animation kidFallRight;
+    Animation kidFallLeft;
     Animation kidIdleRight;
+    Animation kidIdleLeft;
     Animation kidDead;
 
     public BoardRenderer(Board board) {
         this.board = board;
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 480, 800);
+        camera.setToOrtho(false, Board.WIDTH, Board.HEIGHT);
 
         createAnimations();
     }
 
     public void render(float delta) {
-
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         drawKid();
@@ -44,7 +42,28 @@ public class BoardRenderer {
     }
 
     private void drawKid() {
-        Animation anim = kidRight;
+        Animation anim;
+        System.out.println(board.kid.state);
+        switch (board.kid.state) {
+            case IDLE:
+                anim = board.kid.dir == Kid.RIGHT ? kidIdleRight : kidIdleLeft;
+                break;
+            case RUN:
+                anim = board.kid.dir == Kid.RIGHT ? kidRight : kidLeft;
+                break;
+            case JUMP:
+                anim = board.kid.dir == Kid.RIGHT ? kidJumpRight : kidJumpLeft;
+                break;
+            case FALL:
+                anim = board.kid.dir == Kid.RIGHT ? kidFallRight : kidFallLeft;
+                break;
+            case DEAD:
+                anim = kidDead;
+                break;
+            default:
+                throw new IllegalStateException();
+        }
+
         batch.draw(anim.getKeyFrame(board.kid.stateTime, true), board.kid.pos.x, board.kid.pos.y, board.kid.hitBox.width, board.kid.hitBox.height);
     }
     
@@ -65,6 +84,12 @@ public class BoardRenderer {
 
         kidRight = new Animation(.1f, new Array<TextureAtlas.AtlasRegion>(true, kidRightRegions.toArray(), 3, 6));
         kidLeft = new Animation(.1f, new Array<TextureAtlas.AtlasRegion>(true, kidLeftRegions.toArray(), 3, 6));
+
+        kidJumpRight = new Animation(.1f, kidRightRegions.get(2));
+        kidJumpLeft = new Animation(.1f, kidLeftRegions.get(2));
+
+        kidFallRight = new Animation(.1f, kidRightRegions.get(1));
+        kidFallLeft = new Animation(.1f, kidLeftRegions.get(1));
 
 
         System.out.println(new Array<TextureAtlas.AtlasRegion>(false, kidRightRegions.toArray(), 3, 6).toString());

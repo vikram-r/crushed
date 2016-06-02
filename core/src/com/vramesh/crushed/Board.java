@@ -5,6 +5,11 @@ package com.vramesh.crushed;
  */
 public class Board {
 
+    final static float WIDTH = 480f;
+    final static float HEIGHT = 800f;
+
+    final static float GRAVITY = -10f;
+
     Kid kid;
 
     public Board() {
