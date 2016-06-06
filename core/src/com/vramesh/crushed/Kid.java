@@ -12,10 +12,7 @@ public class Kid {
     static final int RIGHT = 1;
     static final int LEFT = -1;
 
-    static final float ACCELERATION = 5f;
-    static final float DECELERATION = -5f;
-    static final float MAX_VEL = 5f;
-
+    static final float MAX_VEL = 75f;
 
     Vector2 pos = new Vector2();
     Vector2 vel = new Vector2();
@@ -31,6 +28,7 @@ public class Kid {
         pos.y = y;
         vel.x = 0;
         vel.y = 0;
+        accel.x = 0;
         accel.y = Board.GRAVITY;
 
         state = State.IDLE;
@@ -42,24 +40,19 @@ public class Kid {
     }
 
     public void update(float delta) {
-        stateTime += delta;
-
         handleInputs();
 
         accel.scl(delta);
-        vel.add(accel.x, state == State.JUMP ? accel.y : 0);
-        if (accel.x == 0) vel.x *= DECELERATION;
-
-        if (vel.x > MAX_VEL) vel.x = MAX_VEL;
-        if (vel.x < -MAX_VEL) vel.x = -MAX_VEL;
+        vel.add(0, isAirborne() ? accel.y : 0);
         vel.scl(delta);
-
         move(delta);
+        vel.scl(1f/delta);
+        stateTime += delta;
     }
 
     private void move(float delta) {
         //todo collision check
-        pos.add(vel.scl(delta));
+        pos.add(vel);
     }
 
     /**
@@ -86,14 +79,14 @@ public class Kid {
         if (isRightPressed(x1, x2)) {
             dir = RIGHT;
             if (state == State.IDLE && !isAirborne()) state = State.RUN;
-            accel.x = ACCELERATION * dir;
+            vel.x = MAX_VEL * dir;
         } else if (isLeftPressed(x1, x2)) {
             dir = LEFT;
             if (state == State.IDLE && !isAirborne()) state = State.RUN;
-            accel.x = ACCELERATION * dir;
+            vel.x = MAX_VEL * dir;
         } else {
             if (!isAirborne()) state = State.IDLE;
-            accel.x = 0;
+            vel.x = 0;
         }
 
     }

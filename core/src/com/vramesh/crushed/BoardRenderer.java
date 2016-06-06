@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -26,6 +28,8 @@ public class BoardRenderer {
     Animation kidIdleLeft;
     Animation kidDead;
 
+    TextureRegion block;
+
     public BoardRenderer(Board board) {
         this.board = board;
         camera = new OrthographicCamera();
@@ -43,7 +47,7 @@ public class BoardRenderer {
 
     private void drawKid() {
         Animation anim;
-        System.out.println(board.kid.state);
+//        System.out.println(board.kid.state);
         switch (board.kid.state) {
             case IDLE:
                 anim = board.kid.dir == Kid.RIGHT ? kidIdleRight : kidIdleLeft;
@@ -91,14 +95,9 @@ public class BoardRenderer {
         kidFallRight = new Animation(.1f, kidRightRegions.get(1));
         kidFallLeft = new Animation(.1f, kidLeftRegions.get(1));
 
-
-        System.out.println(new Array<TextureAtlas.AtlasRegion>(false, kidRightRegions.toArray(), 3, 6).toString());
-
-        TextureAtlas atlas;
-        atlas = new TextureAtlas(Gdx.files.internal("kid/kid.atlas"));
-        for (TextureAtlas.AtlasRegion r : atlas.getRegions()) {
-            System.out.println(r.name);
-        }
+        TextureAtlas tilesAtlas = new TextureAtlas(Gdx.files.internal("tiles/tiles.atlas"));
+        System.out.println(tilesAtlas.getRegions().toString());
+        block = tilesAtlas.findRegion("grey_block.png");
 
     }
 
