@@ -13,7 +13,7 @@ public class Kid {
     static final int LEFT = -1;
 
     static final float MAX_VEL = 100f;
-    static final float JUMP_VEL = 300f;
+    static final float JUMP_VEL = 500f;
 
     Vector2 pos = new Vector2();
     Vector2 vel = new Vector2();
