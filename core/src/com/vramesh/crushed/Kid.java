@@ -12,7 +12,8 @@ public class Kid {
     static final int RIGHT = 1;
     static final int LEFT = -1;
 
-    static final float MAX_VEL = 75f;
+    static final float MAX_VEL = 100f;
+    static final float JUMP_VEL = 300f;
 
     Vector2 pos = new Vector2();
     Vector2 vel = new Vector2();
@@ -30,6 +31,7 @@ public class Kid {
         vel.y = 0;
         accel.x = 0;
         accel.y = Board.GRAVITY;
+        System.out.println("Y accel: " + accel.y);
 
         state = State.IDLE;
         dir = RIGHT;
@@ -41,9 +43,9 @@ public class Kid {
 
     public void update(float delta) {
         handleInputs();
-
+        accel.y = Board.GRAVITY;
         accel.scl(delta);
-        vel.add(0, isAirborne() ? accel.y : 0);
+        vel.add(accel.x, isAirborne() ? accel.y : 0); //accel.x will always be 0 for now
         vel.scl(delta);
         move(delta);
         vel.scl(1f/delta);
@@ -52,7 +54,35 @@ public class Kid {
 
     private void move(float delta) {
         //todo collision check
-        pos.add(vel);
+        hitBox.x += vel.x;
+        checkXCollisions();
+
+        hitBox.y += vel.y;
+        checkYCollisions();
+
+        pos.set(hitBox.x, hitBox.y);
+    }
+
+    private void checkXCollisions() {
+        if (hitBox.x + hitBox.width >= Board.WIDTH) {
+            vel.x = 0;
+            hitBox.x = Board.WIDTH - hitBox.width;
+        } else if (hitBox.x <= 0) {
+            vel.x = 0;
+            hitBox.x = 0;
+        }
+    }
+
+    private void checkYCollisions() {
+        if (hitBox.y <= 0) {
+            vel.y = 0;
+            hitBox.y = 0;
+            state = State.IDLE;
+        } else if (hitBox.y >= Board.HEIGHT) {
+            vel.y = 0;
+            hitBox.y = Board.HEIGHT - hitBox.height;
+        }
+
     }
 
     /**
@@ -72,7 +102,12 @@ public class Kid {
         float x2 = (Gdx.input.getX() / (float)Gdx.graphics.getWidth()) * Board.WIDTH; //second touch
 
         if (isJumpPressed(x1, x2)) {
-            if (state != State.FALL) state = State.JUMP;
+            if (!isAirborne()) {
+                state = State.JUMP;
+                vel.y = JUMP_VEL;
+            }
+
+            //todo maybe add double jump, or play sound when trying to jump in air
         }
 
         //right has priority over left
