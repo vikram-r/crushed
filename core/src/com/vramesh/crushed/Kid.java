@@ -13,7 +13,7 @@ public class Kid {
     static final int LEFT = -1;
 
     static final float MAX_VEL = 100f;
-    static final float JUMP_VEL = 500f;
+    static final float JUMP_VEL = 550f;
 
     Vector2 pos = new Vector2();
     Vector2 vel = new Vector2();
@@ -31,14 +31,13 @@ public class Kid {
         vel.y = 0;
         accel.x = 0;
         accel.y = Board.GRAVITY;
-        System.out.println("Y accel: " + accel.y);
 
         state = State.IDLE;
         dir = RIGHT;
 
         stateTime = 0;
 
-        hitBox.set(pos.x, pos.y, 26f, 40f); //todo maybe center x and y?
+        hitBox.set(pos.x, pos.y, 26f, 40f);
     }
 
     public void update(float delta) {
@@ -77,7 +76,7 @@ public class Kid {
         if (hitBox.y <= 0) {
             vel.y = 0;
             hitBox.y = 0;
-            state = State.IDLE;
+            if (isAirborne()) state = State.IDLE;
         } else if (hitBox.y >= Board.HEIGHT) {
             vel.y = 0;
             hitBox.y = Board.HEIGHT - hitBox.height;
