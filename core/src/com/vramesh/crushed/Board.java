@@ -8,7 +8,7 @@ public class Board {
     final static float WIDTH = 480f;
     final static float HEIGHT = 800f;
 
-    final static float GRAVITY = -1000f;
+    final static float GRAVITY = -100f;
 
     Kid kid;
 

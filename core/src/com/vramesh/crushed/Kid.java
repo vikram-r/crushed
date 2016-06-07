@@ -11,9 +11,9 @@ public class Kid {
     }
     static final int RIGHT = 1;
     static final int LEFT = -1;
-
     static final float MAX_VEL = 100f;
     static final float JUMP_VEL = 550f;
+    static final float MASS = 10f;
 
     Vector2 pos = new Vector2();
     Vector2 vel = new Vector2();
@@ -30,7 +30,7 @@ public class Kid {
         vel.x = 0;
         vel.y = 0;
         accel.x = 0;
-        accel.y = Board.GRAVITY;
+        accel.y = Board.GRAVITY * MASS;
 
         state = State.IDLE;
         dir = RIGHT;
@@ -42,7 +42,7 @@ public class Kid {
 
     public void update(float delta) {
         handleInputs();
-        accel.y = Board.GRAVITY;
+        accel.y = Board.GRAVITY * MASS;
         accel.scl(delta);
         vel.add(accel.x, isAirborne() ? accel.y : 0); //accel.x will always be 0 for now
         vel.scl(delta);
