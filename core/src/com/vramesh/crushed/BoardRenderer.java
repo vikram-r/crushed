@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -42,6 +43,7 @@ public class BoardRenderer {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         drawKid();
+        drawBlocks();
         batch.end();
     }
 
@@ -70,7 +72,15 @@ public class BoardRenderer {
 
         batch.draw(anim.getKeyFrame(board.kid.stateTime, true), board.kid.pos.x, board.kid.pos.y, board.kid.hitBox.width, board.kid.hitBox.height);
     }
-    
+
+    private void drawBlocks() {
+        for (Block blockObj : board.blockManager.getExistingBlocks()) {
+            for (Rectangle rect : blockObj.rectangles) {
+                batch.draw(block, rect.x, rect.y);
+            }
+        }
+    }
+
     private void createAnimations() {
         TextureAtlas kidAtlas = new TextureAtlas(Gdx.files.internal("kid/kid.atlas"));
 
@@ -97,7 +107,7 @@ public class BoardRenderer {
 
         TextureAtlas tilesAtlas = new TextureAtlas(Gdx.files.internal("tiles/tiles.atlas"));
         System.out.println(tilesAtlas.getRegions().toString());
-        block = tilesAtlas.findRegion("grey_block.png");
+        block = tilesAtlas.findRegion("grey_block");
 
     }
 

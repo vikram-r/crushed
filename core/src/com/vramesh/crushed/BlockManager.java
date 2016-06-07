@@ -1,31 +1,56 @@
 package com.vramesh.crushed;
 
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 
 /**
- * Singleton responsible for generating blocks. It should use object pooling
+ * Singleton responsible for managing and generating blocks.
  */
-public class BlockFactory {
+public class BlockManager {
 
+    //todo should blocks be fixed size/weight?
+    static final float MAX_WIDTH = 32f;
+    static final float MAX_HEIGHT = 32f;
+    static final float MAX_WEIGHT = 10f;
+
+    private long lastCreateTime = 0;
     private Array<Block> existingBlocks;
 
-    public BlockFactory() {
+    public BlockManager() {
         existingBlocks = new Array<Block>();
+    }
+
+    public void spawnBlocks() {
+        if(TimeUtils.nanoTime() - lastCreateTime > 3000000000L) {
+            //todo make this choose a random type of block
+            //32,32
+            float randX = MathUtils.random(0f, Board.WIDTH - MAX_WIDTH);
+            //todo make sure not spawning on top of another box!
+            newSingleBlock(new Rectangle(randX, Board.HEIGHT - MAX_HEIGHT, MAX_WIDTH, MAX_HEIGHT), MAX_WEIGHT);
+            lastCreateTime = TimeUtils.nanoTime();
+        }
+    }
+
+    public void updateBlocks(float delta) {
+        for (Block block : existingBlocks) {
+            block.update(delta);
+        }
     }
 
     /**
      * Get all of currently existing blocks
-     * @return
+     * @return all currently existing blocks
      */
     public Array<Block> getExistingBlocks() {
         return existingBlocks;
     }
 
     /**
-     * Generates a new SingleBlock
-     * @return a reference to the created SingleBlock
+     * Generates a new Single Block (a block with only 1 rectangle)
+     * @return a reference to the created Single Block
      */
     public Block newSingleBlock(Rectangle rectangle, float mass) {
         Block singleBlock = new BlockBuilder()
@@ -49,6 +74,7 @@ public class BlockFactory {
 
         public BlockBuilder withRectangle(Rectangle rect) {
             if (rectangles == null) rectangles = new Array<Rectangle>();
+            //todo ensure this rectangle connects with one of the previous
             rectangles.add(rect);
             return this;
         }

@@ -11,12 +11,16 @@ public class Board {
     final static float GRAVITY = -100f;
 
     Kid kid;
+    BlockManager blockManager;
 
     public Board() {
-        kid = new Kid(240, 400);
+        this.blockManager = new BlockManager();
+        this.kid = new Kid(240, 400);
     }
 
     public void update(float delta) {
         kid.update(delta);
+        blockManager.spawnBlocks();
+        blockManager.updateBlocks(delta);
     }
 }

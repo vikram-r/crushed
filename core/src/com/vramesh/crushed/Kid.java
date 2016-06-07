@@ -81,7 +81,6 @@ public class Kid {
             vel.y = 0;
             hitBox.y = Board.HEIGHT - hitBox.height;
         }
-
     }
 
     /**
