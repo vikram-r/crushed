@@ -23,12 +23,12 @@ public class BlockManager {
     }
 
     public void spawnBlocks() {
-        if(TimeUtils.nanoTime() - lastCreateTime > 3000000000L) {
+        if(TimeUtils.nanoTime() - lastCreateTime > 1000000000L) {
             //todo make this choose a random type of block
             //32,32
             float randX = MathUtils.random(0f, Board.WIDTH - MAX_WIDTH);
             //todo make sure not spawning on top of another box!
-            newSingleBlock(new Rectangle(randX, Board.HEIGHT - MAX_HEIGHT, MAX_WIDTH, MAX_HEIGHT), 1);
+            newSingleBlock(new Rectangle(randX, Board.HEIGHT - MAX_HEIGHT, MAX_WIDTH, MAX_HEIGHT), 5);
             lastCreateTime = TimeUtils.nanoTime();
         }
     }
@@ -52,7 +52,7 @@ public class BlockManager {
      * @return a reference to the created Single Block
      */
     public Block newSingleBlock(Rectangle rectangle, float speed) {
-        Block singleBlock = new BlockBuilder()
+        Block singleBlock = new BlockBuilder(this)
                 .withRectangle(rectangle)
                 .withSpeed(speed)
                 .build();
@@ -68,8 +68,13 @@ public class BlockManager {
      */
     public static class BlockBuilder {
 
+        BlockManager blockManager;
         private Array<Rectangle> rectangles;
         private Float speed;
+
+        public BlockBuilder(BlockManager blockManager) {
+            this.blockManager = blockManager;
+        }
 
         public BlockBuilder withRectangle(Rectangle rect) {
             if (rectangles == null) rectangles = new Array<Rectangle>();
@@ -87,7 +92,7 @@ public class BlockManager {
             if (rectangles == null) {
                 throw new IllegalArgumentException("Not all parameters set");
             }
-            return new Block(rectangles, speed != null ? speed : 1);
+            return new Block(blockManager, rectangles, speed != null ? speed : 1);
         }
     }
 }
