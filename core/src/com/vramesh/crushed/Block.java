@@ -12,27 +12,21 @@ public class Block implements Pool.Poolable {
     }
     State state;
 
-    static final float MAX_VEL = 100f;
     Vector2 vel = new Vector2();
-    Vector2 accel = new Vector2();
     Array<Rectangle> rectangles;
-    float mass;
+    float speed;
     float stateTime;
 
     //this method should not be called directly. BlockManager.BlockBuilder should be used
-    public Block(Array<Rectangle> rectangles, float mass) {
+    public Block(Array<Rectangle> rectangles, float speed) {
         this.rectangles = rectangles;
-        this.mass = mass;
+        this.speed = speed;
         this.state = State.FALL;
         this.stateTime = 0;
-        accel.y = Board.GRAVITY * this.mass;
     }
 
     public void update(float delta) {
-        accel.y = Board.GRAVITY * mass;
-
-        accel.scl(delta);
-        vel.add(0, state == State.FALL ? accel.y : 0); //blocks only fall down for now (no horizontal movement)
+        vel.add(0, state == State.FALL ? speed : 0); //blocks only fall down for now (no horizontal movement)
         vel.scl(delta);
         move();
         vel.scl(1.0f / delta);
@@ -54,17 +48,18 @@ public class Block implements Pool.Poolable {
         for (Rectangle rect : rectangles) {
             if (rect.y <= 0) {
                 vel.y = 0;
-                System.out.println("here");
                 state = State.IDLE;
                 shiftUp = Math.max(0 - rect.y, shiftUp);
             }
         }
+        System.out.println(shiftUp);
         //if a block has gone too far, we also need to shift all rectangles up to compensate
-//        if (shiftUp != 0) {
-//            for (Rectangle rect : rectangles) {
-//                rect.setY(rect.getY() - shiftUp);
-//            }
-//        }
+        if (shiftUp != 0) {
+            System.out.println("here");
+            for (Rectangle rect : rectangles) {
+                rect.setY(rect.getY() + shiftUp);
+            }
+        }
 
         //todo more intelligent stuff
     }

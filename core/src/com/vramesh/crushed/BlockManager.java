@@ -14,7 +14,6 @@ public class BlockManager {
     //todo should blocks be fixed size/weight?
     static final float MAX_WIDTH = 32f;
     static final float MAX_HEIGHT = 32f;
-    static final float MAX_WEIGHT = 10f;
 
     private long lastCreateTime = 0;
     private Array<Block> existingBlocks;
@@ -29,7 +28,7 @@ public class BlockManager {
             //32,32
             float randX = MathUtils.random(0f, Board.WIDTH - MAX_WIDTH);
             //todo make sure not spawning on top of another box!
-            newSingleBlock(new Rectangle(randX, Board.HEIGHT - MAX_HEIGHT, MAX_WIDTH, MAX_HEIGHT), MAX_WEIGHT);
+            newSingleBlock(new Rectangle(randX, Board.HEIGHT - MAX_HEIGHT, MAX_WIDTH, MAX_HEIGHT), 1);
             lastCreateTime = TimeUtils.nanoTime();
         }
     }
@@ -52,10 +51,10 @@ public class BlockManager {
      * Generates a new Single Block (a block with only 1 rectangle)
      * @return a reference to the created Single Block
      */
-    public Block newSingleBlock(Rectangle rectangle, float mass) {
+    public Block newSingleBlock(Rectangle rectangle, float speed) {
         Block singleBlock = new BlockBuilder()
                 .withRectangle(rectangle)
-                .withMass(mass)
+                .withSpeed(speed)
                 .build();
         //todo make sure no existing blocks overlap with this new one
 
@@ -70,7 +69,7 @@ public class BlockManager {
     public static class BlockBuilder {
 
         private Array<Rectangle> rectangles;
-        private Float mass;
+        private Float speed;
 
         public BlockBuilder withRectangle(Rectangle rect) {
             if (rectangles == null) rectangles = new Array<Rectangle>();
@@ -79,16 +78,16 @@ public class BlockManager {
             return this;
         }
 
-        public BlockBuilder withMass(float mass) {
-            this.mass = mass;
+        public BlockBuilder withSpeed(float speed) {
+            this.speed = -1 * Math.abs(speed);
             return this;
         }
 
         public Block build() {
-            if (rectangles == null || mass == null) {
+            if (rectangles == null) {
                 throw new IllegalArgumentException("Not all parameters set");
             }
-            return new Block(rectangles, mass);
+            return new Block(rectangles, speed != null ? speed : 1);
         }
     }
 }
