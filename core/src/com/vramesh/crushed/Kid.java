@@ -4,8 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class Kid {
+
+    Board board;
+
+    Body body;
+
     public enum State {
         IDLE, RUN, JUMP, FALL, DEAD
     }
@@ -13,75 +21,118 @@ public class Kid {
     static final int LEFT = -1;
     static final float MAX_VEL = 100f;
     static final float JUMP_VEL = 550f;
-    static final float MASS = 10f;
-
+//    static final float MASS = 10f;
+//
     Vector2 pos = new Vector2();
-    Vector2 vel = new Vector2();
-    Vector2 accel = new Vector2();
-
+//    Vector2 accel = new Vector2();
+//
     State state;
     int dir;
     float stateTime;
-    public Rectangle hitBox = new Rectangle();
+//    public Rectangle hitBox = new Rectangle();
 
-    public Kid(float x, float y) {
-        pos.x = x;
-        pos.y = y;
-        vel.x = 0;
-        vel.y = 0;
-        accel.x = 0;
-        accel.y = Board.GRAVITY * MASS;
+    public Kid(Board board, float x, float y) {
+        this.board = board;
 
-        state = State.IDLE;
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(x, y);
+
+        Body body = board.world.createBody(bodyDef);
+        PolygonShape shape = new PolygonShape();
+
+        //26f x 40f
+        shape.setAsBox(13f, 20f);
+        body.createFixture(shape, 1);
+
+        this.body = body;
+
+        shape.dispose();
+
         dir = RIGHT;
 
+//        pos.x = x;
+//        pos.y = y;
+//        vel.x = 0;
+//        vel.y = 0;
+//        accel.x = 0;
+//        accel.y = Board.GRAVITY * MASS;
+//
+        state = State.IDLE;
+//        dir = RIGHT;
+//
         stateTime = 0;
-
-        hitBox.set(pos.x, pos.y, 26f, 40f);
+//
+//        hitBox.set(pos.x, pos.y, 26f, 40f);
     }
 
     public void update(float delta) {
+
         handleInputs();
-        accel.y = Board.GRAVITY * MASS;
-        accel.scl(delta);
-        vel.add(accel.x, isAirborne() ? accel.y : 0); //accel.x will always be 0 for now
-        vel.scl(delta);
-        move(delta);
-        vel.scl(1f/delta);
+
+        pos = body.getPosition();
+
         stateTime += delta;
     }
 
-    private void move(float delta) {
-        //todo collision check
-        hitBox.x += vel.x;
-        checkXCollisions();
+//    public void handleInputs() {
+//        float x1 = (Gdx.input.getX() / (float)Gdx.graphics.getWidth()) * Board.WIDTH; //first touch
+//        float x2 = (Gdx.input.getX() / (float)Gdx.graphics.getWidth()) * Board.WIDTH; //second touch
+//
+//        if (isLeftPressed(x1, x2)) {
+//            body.setLinearVelocity(-1 * MAX_VEL, 0f);
+//            dir = LEFT;
+//        } else if (isRightPressed(x1, x2)) {
+//            body.setLinearVelocity(MAX_VEL, 0f);
+//            dir = RIGHT;
+//        } else {
+//            body.setLinearVelocity(0, 0);
+//        }
+//    }
 
-        hitBox.y += vel.y;
-        checkYCollisions();
-
-        pos.set(hitBox.x, hitBox.y);
-    }
-
-    private void checkXCollisions() {
-        if (hitBox.x + hitBox.width >= Board.WIDTH) {
-            vel.x = 0;
-            hitBox.x = Board.WIDTH - hitBox.width;
-        } else if (hitBox.x <= 0) {
-            vel.x = 0;
-            hitBox.x = 0;
-        }
-    }
-
-    private void checkYCollisions() {
-        if (hitBox.y <= 0) {
-            vel.y = 0;
-            hitBox.y = 0;
-            if (isAirborne()) state = State.IDLE;
-        } else if (hitBox.y >= Board.HEIGHT) {
-            vel.y = 0;
-            hitBox.y = Board.HEIGHT - hitBox.height;
-        }
-    }
+//    public void update(float delta) {
+//        handleInputs();
+//        accel.y = Board.GRAVITY * MASS;
+//        accel.scl(delta);
+//        vel.add(accel.x, isAirborne() ? accel.y : 0); //accel.x will always be 0 for now
+//        vel.scl(delta);
+//        move(delta);
+//        vel.scl(1f/delta);
+//        stateTime += delta;
+//    }
+//
+//    private void move(float delta) {
+//        //todo collision check
+//        hitBox.x += vel.x;
+//        checkXCollisions();
+//
+//        hitBox.y += vel.y;
+//        checkYCollisions();
+//
+//        pos.set(hitBox.x, hitBox.y);
+//    }
+//
+//    private void checkXCollisions() {
+//        if (hitBox.x + hitBox.width >= Board.WIDTH) {
+//            vel.x = 0;
+//            hitBox.x = Board.WIDTH - hitBox.width;
+//        } else if (hitBox.x <= 0) {
+//            vel.x = 0;
+//            hitBox.x = 0;
+//        }
+//    }
+//
+//    private void checkYCollisions() {
+//        if (hitBox.y <= 0) {
+//            vel.y = 0;
+//            hitBox.y = 0;
+//            if (isAirborne()) state = State.IDLE;
+//        } else if (hitBox.y >= Board.HEIGHT) {
+//            vel.y = 0;
+//            hitBox.y = Board.HEIGHT - hitBox.height;
+//        }
+//    }
 
     /**
      *
@@ -102,7 +153,8 @@ public class Kid {
         if (isJumpPressed(x1, x2)) {
             if (!isAirborne()) {
                 state = State.JUMP;
-                vel.y = JUMP_VEL;
+//                vel.y = JUMP_VEL;
+                body.setLinearVelocity(body.getLinearVelocity().x, JUMP_VEL);
             }
 
             //todo maybe add double jump, or play sound when trying to jump in air
@@ -112,14 +164,19 @@ public class Kid {
         if (isRightPressed(x1, x2)) {
             dir = RIGHT;
             if (state == State.IDLE && !isAirborne()) state = State.RUN;
-            vel.x = MAX_VEL * dir;
+//            vel.x = MAX_VEL * dir;
+            body.setLinearVelocity(MAX_VEL, body.getLinearVelocity().y);
+
         } else if (isLeftPressed(x1, x2)) {
             dir = LEFT;
             if (state == State.IDLE && !isAirborne()) state = State.RUN;
-            vel.x = MAX_VEL * dir;
+//            vel.x = MAX_VEL * dir;
+            body.setLinearVelocity(-1 * MAX_VEL, body.getLinearVelocity().y);
+
         } else {
             if (!isAirborne()) state = State.IDLE;
-            vel.x = 0;
+//            vel.x = 0;
+            body.setLinearVelocity(0, body.getLinearVelocity().y);
         }
 
     }
@@ -147,6 +204,14 @@ public class Kid {
                 || Gdx.input.isKeyPressed(Input.Keys.W)
                 || (Gdx.input.isTouched() && x1 > 1 * (Board.WIDTH / 3) && x1 <= 2 * (Board.WIDTH / 3))
                 || (Gdx.input.isTouched() && x2 > 1 * (Board.WIDTH / 3) && x2 <= 2 * (Board.WIDTH / 3)));
+    }
+
+    public float getWidth() {
+        return 26f;
+    }
+
+    public float getHeight() {
+        return 40f;
     }
 
 }

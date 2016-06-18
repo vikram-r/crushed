@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -30,6 +31,8 @@ public class BoardRenderer {
 
     TextureRegion block;
 
+//    Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+
     public BoardRenderer(Board board) {
         this.board = board;
         camera = new OrthographicCamera();
@@ -42,8 +45,15 @@ public class BoardRenderer {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         drawKid();
-        drawBlocks();
+//        drawBlocks();
+
+//        debugRenderer.render(board.world, camera.combined);
+
         batch.end();
+
+        board.world.step(1/60f, 6, 2);
+
+
     }
 
     private void drawKid() {
@@ -69,7 +79,9 @@ public class BoardRenderer {
                 throw new IllegalStateException();
         }
 
-        batch.draw(anim.getKeyFrame(board.kid.stateTime, true), board.kid.pos.x, board.kid.pos.y, board.kid.hitBox.width, board.kid.hitBox.height);
+//        batch.draw(anim.getKeyFrame(board.kid.stateTime, true), board.kid.pos.x, board.kid.pos.y, board.kid.hitBox.width, board.kid.hitBox.height);
+        batch.draw(anim.getKeyFrame(board.kid.stateTime, true), board.kid.pos.x, board.kid.pos.y, board.kid.getWidth(), board.kid.getHeight());
+
     }
 
     private void drawBlocks() {
