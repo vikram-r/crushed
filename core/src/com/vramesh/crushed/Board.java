@@ -15,7 +15,7 @@ public class Board {
 
     public Board() {
         this.blockManager = new BlockManager();
-        this.kid = new Kid(240, 400);
+        this.kid = new Kid(240, 400, this);
     }
 
     public void update(float delta) {
